@@ -10,6 +10,17 @@ const { Scheduler } = util;
 const { abs, sin, cos, PI: pi, sqrt } = Math;
 const { round } = util;
 
+function saveData(data){
+    fetch("https://script.google.com/macros/s/AKfycbzmHlcL0nHAfxIi99oo_D9_hHvyBavSwkRtppk8vq6Dj9OAqhFoCYqx1_qKgNTDjlNy/exec", {
+        method: "POST",
+        body: JSON.stringify(data)
+    }).then(response => {
+        console.log("Data saved!");
+    }).catch(error => {
+        console.error("Error:", error);
+    });
+}
+
 
 // store info about the experiment session:
 let expName = 'Music Emotion Task';  // from the Builder filename that created this script
@@ -1019,6 +1030,9 @@ async function quitPsychoJS(message, isCompleted) {
   if (psychoJS.experiment.isEntryEmpty()) {
     psychoJS.experiment.nextEntry();
   }
+
+  saveData(psychoJS.experiment._trialsData);
+
   psychoJS.window.close();
   psychoJS.quit({message: message, isCompleted: isCompleted});
   
