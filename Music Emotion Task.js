@@ -1027,14 +1027,14 @@ function importConditions(currentLoop) {
 
 async function quitPsychoJS(message, isCompleted) {
   // Check for and save orphaned data
-  //if (psychoJS.experiment.isEntryEmpty()) {
-    //psychoJS.experiment.nextEntry();
-  //}
+  if (psychoJS.experiment.isEntryEmpty()) {
+    psychoJS.experiment.nextEntry();
+  }
 
   saveData(psychoJS.experiment._trialsData);
 
   psychoJS.window.close();
-  psychoJS.quit({message: message, isCompleted: isCompleted});
+  psychoJS.quit({save:False});
   
   return Scheduler.Event.QUIT;
 }
