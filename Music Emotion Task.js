@@ -1034,7 +1034,7 @@ async function quitPsychoJS(message, isCompleted) {
   saveData(psychoJS.experiment._trialsData);
 
   psychoJS.window.close();
-  psychoJS.quit({save:false});
+  psychoJS.quit({message: message, isCompleted: isCompleted, save:false});
   
   return Scheduler.Event.QUIT;
 }
