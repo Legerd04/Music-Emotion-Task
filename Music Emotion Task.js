@@ -10,21 +10,6 @@ const { Scheduler } = util;
 const { abs, sin, cos, PI: pi, sqrt } = Math;
 const { round } = util;
 
-// --- Hard kill for all local saving/downloading ---
-data.ExperimentHandler.prototype.save = function() {
-  console.log("Blocked PsychoJS local save()");
-};
-data.ExperimentHandler.prototype._download = function() {
-  console.log("Blocked PsychoJS _download()");
-};
-
-
-// --- Disable automatic file downloads completely ---
-window.saveAs = () => {};  // blocks FileSaver.js
-if (psychoJS && psychoJS.experiment) {
-  psychoJS.experiment.save = () => {}; // no-op
-}
-
 function saveData(data){
     fetch("https://script.google.com/macros/s/AKfycbzmHlcL0nHAfxIi99oo_D9_hHvyBavSwkRtppk8vq6Dj9OAqhFoCYqx1_qKgNTDjlNy/exec", {
         method: "POST",
@@ -50,10 +35,6 @@ let PILOTING = util.getUrlParameters().has('__pilotToken');
 const psychoJS = new PsychoJS({
   debug: true
 });
-
-if (psychoJS?.experiment) {
-  psychoJS.experiment.save = () => {}; // no-op
-}
 
 // open window:
 psychoJS.openWindow({
@@ -1050,15 +1031,11 @@ async function quitPsychoJS(message, isCompleted) {
   if (psychoJS.experiment.isEntryEmpty()) {
     psychoJS.experiment.nextEntry();
   }
-
- try {
-    saveData(psychoJS.experiment._trialsData);
-  } catch (e) {
-    console.error('saveData failed:', e);
-  }
-
+  
+  saveData(psychoJS.experiment._trialsData);
+  
   psychoJS.window.close();
-  psychoJS.quit({message: message, isCompleted: false});
+  psychoJS.quit({message: message, isCompleted: isCompleted});
   
   return Scheduler.Event.QUIT;
 }
