@@ -10,6 +10,12 @@ const { Scheduler } = util;
 const { abs, sin, cos, PI: pi, sqrt } = Math;
 const { round } = util;
 
+// --- Disable automatic file downloads completely ---
+window.saveAs = () => {};  // blocks FileSaver.js
+if (psychoJS && psychoJS.experiment) {
+  psychoJS.experiment.save = () => {}; // no-op
+}
+
 function saveData(data){
     fetch("https://script.google.com/macros/s/AKfycbzmHlcL0nHAfxIi99oo_D9_hHvyBavSwkRtppk8vq6Dj9OAqhFoCYqx1_qKgNTDjlNy/exec", {
         method: "POST",
@@ -101,6 +107,7 @@ psychoJS.experimentLogger.setLevel(core.Logger.ServerLevel.INFO);
 var currentLoop;
 var frameDur;
 async function updateInfo() {
+  psychoJS.experiment.save = () => {};
   currentLoop = psychoJS.experiment;  // right now there are no loops
   expInfo['date'] = util.MonotonicClock.getDateStr();  // add a simple timestamp
   expInfo['expName'] = expName;
@@ -1039,10 +1046,6 @@ async function quitPsychoJS(message, isCompleted) {
     saveData(psychoJS.experiment._trialsData);
   } catch (e) {
     console.error('saveData failed:', e);
-  }
-
-    if (psychoJS?.experiment?.save) {
-    psychoJS.experiment.save = () => {};
   }
 
   psychoJS.window.close();
