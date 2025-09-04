@@ -10,6 +10,15 @@ const { Scheduler } = util;
 const { abs, sin, cos, PI: pi, sqrt } = Math;
 const { round } = util;
 
+// --- Hard kill for all local saving/downloading ---
+data.ExperimentHandler.prototype.save = function() {
+  console.log("Blocked PsychoJS local save()");
+};
+data.ExperimentHandler.prototype._download = function() {
+  console.log("Blocked PsychoJS _download()");
+};
+
+
 // --- Disable automatic file downloads completely ---
 window.saveAs = () => {};  // blocks FileSaver.js
 if (psychoJS && psychoJS.experiment) {
