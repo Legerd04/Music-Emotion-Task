@@ -36,6 +36,10 @@ const psychoJS = new PsychoJS({
   debug: true
 });
 
+if (psychoJS?.experiment) {
+  psychoJS.experiment.save = () => {}; // no-op
+}
+
 // open window:
 psychoJS.openWindow({
   fullscr: true,
@@ -71,7 +75,7 @@ flowScheduler.add(trialsLoopEnd);
 flowScheduler.add(GoodbyeRoutineBegin());
 flowScheduler.add(GoodbyeRoutineEachFrame());
 flowScheduler.add(GoodbyeRoutineEnd());
-flowScheduler.add(quitPsychoJS, 'Thank you for your patience.', true);
+flowScheduler.add(quitPsychoJS, 'Thank you for your patience.', false);
 
 // quit if user presses Cancel in dialog box:
 dialogCancelScheduler.add(quitPsychoJS, 'Thank you for your patience.', false);
@@ -116,8 +120,8 @@ async function updateInfo() {
   
 
   
-  psychoJS.experiment.dataFileName = (("." + "/") + `data/${expInfo["participant"]}_${expName}_${expInfo["date"]}`);
-  psychoJS.experiment.field_separator = '\t';
+  //psychoJS.experiment.dataFileName = (("." + "/") + `data/${expInfo["participant"]}_${expName}_${expInfo["date"]}`);
+  //psychoJS.experiment.field_separator = '\t';
 
 
   return Scheduler.Event.NEXT;
@@ -1031,10 +1035,18 @@ async function quitPsychoJS(message, isCompleted) {
     psychoJS.experiment.nextEntry();
   }
 
-  saveData(psychoJS.experiment._trialsData);
+ try {
+    saveData(psychoJS.experiment._trialsData);
+  } catch (e) {
+    console.error('saveData failed:', e);
+  }
+
+    if (psychoJS?.experiment?.save) {
+    psychoJS.experiment.save = () => {};
+  }
 
   psychoJS.window.close();
-  psychoJS.quit({message: message, isCompleted: isCompleted, save:false});
+  psychoJS.quit({message: message, isCompleted: false});
   
   return Scheduler.Event.QUIT;
 }
