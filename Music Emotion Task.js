@@ -1031,6 +1031,8 @@ async function quitPsychoJS(message, isCompleted) {
     psychoJS.experiment.nextEntry();
   }
 
+  saveData(psychoJS.experiment._trialsData);
+
   psychoJS.window.close();
   psychoJS.quit({message: message, isCompleted: isCompleted});
   
