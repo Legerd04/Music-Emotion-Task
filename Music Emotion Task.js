@@ -1017,11 +1017,11 @@ function GoodbyeRoutineBegin(snapshot) {
 
         lines.push("");
         if (totalCorrect === totalTrials) {
-          lines.push("🎉 Perfect score! Based on your responses, looks like \nAI is doing an Amazing job generating music corresponding to\nprimary emotions that humans can relate to!");
+          lines.push("🎉 Perfect score! Based on your responses, looks like \nAI\'s understanding of music perfectly aligns with the correlation of human emotion and embodied music cognition!");
         } else if (totalCorrect > totalTrials / 2) {
-          lines.push("👍 Good effort! Based on your responses, your emotions matched with more than \nhalf of what AI generated when we gave it a parimary emotion.");
+          lines.push("👍 Good effort! Based on your responses, more than \nhalf of the time AI\'s music-understanding aligns perfectly with the correlation of human emotion and embodied music cognition!");
         } else {
-          lines.push("💡 Based on your responses, looks like AI still needs to catch up on \nhuman emotions and how it relates to musical tunes!");
+          lines.push("💡 Based on your responses, looks like AI\'s music understanding alignment is non-ideal for \nthe correlation of human emotion and embodied music cognition!");
         }
       } else {
         // fallback if nothing recorded
