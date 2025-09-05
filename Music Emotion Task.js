@@ -962,11 +962,11 @@ function GoodbyeRoutineBegin(snapshot) {
       }
 
       const lines = [];
-      lines.push("Thank you for participating!");
+      lines.push("Thank you for participating!\nIn this study, we asked an AI model to create each of the individual music pieces you just heard by giving it one single primary emotion each time.\nLet\'s see if AI did a good job in interpreting which musical tune should correspond to which human emotion:");
       lines.push("");
 
       if (totalTrials > 0) {
-        lines.push(`Overall: ${totalCorrect} out of ${totalTrials} correct.`);
+        lines.push(`Overall: ${totalCorrect} out of ${totalTrials} emotions matched.`);
         lines.push("");
         lines.push("Breakdown by emotion:");
 
@@ -987,11 +987,11 @@ function GoodbyeRoutineBegin(snapshot) {
 
         lines.push("");
         if (totalCorrect === totalTrials) {
-          lines.push("🎉 Perfect score! Amazing job!");
+          lines.push("🎉 Perfect score! Looks like AI is doing an Amazing job generating music corresponding to\nprimary emotions that humans can relate to!");
         } else if (totalCorrect > totalTrials / 2) {
-          lines.push("👍 Good effort! You identified more than half correctly.");
+          lines.push("👍 Good effort! Your emotions matched with more than half of what AI generated when we gave it a parimary emotion.");
         } else {
-          lines.push("💡 Keep practicing, you'll improve!");
+          lines.push("💡 Looks like AI still needs to catch up on human emotions and how it relates to musical tunes!");
         }
       } else {
         // fallback if nothing recorded
@@ -1005,7 +1005,7 @@ function GoodbyeRoutineBegin(snapshot) {
     }
     // === END INSERT ===
     /////////////////////////////////////////////////////////////////////////////////
-    
+
     // keep track of which components have finished
     GoodbyeComponents = [];
     GoodbyeComponents.push(ThankYou);
