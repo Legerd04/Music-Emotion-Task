@@ -185,62 +185,79 @@ async function experimentInit() {
   // Initialize components for Routine "Likert_1"
   Likert_1Clock = new util.Clock();
   Likert1 = new visual.Slider({
-    win: psychoJS.window, name: 'Likert1',
-    startValue: undefined,
-    size: [1.2, 0.1], pos: [0, (- 0.1)], ori: 0.0, units: psychoJS.window.units,
-    labels: ["Happy", "Sad", "Anger", "Fear", "Disgust", "Surprise"], fontSize: 0.05, ticks: [],
-    granularity: 1, style: ["RADIO"],
-    color: new util.Color([(- 1.0), (- 1.0), (- 1.0)]), markerColor: new util.Color([(- 1.0), (- 1.0), (- 1.0)]), lineColor: new util.Color('White'), 
-    opacity: undefined, fontFamily: 'Noto Sans', bold: true, italic: false, depth: 0, 
-    flip: false,
-  });
+  win: psychoJS.window, name: 'Likert1',
+  startValue: undefined,
+  size: [0.7, 0.05], pos: [0, (-0.2)], ori: 0.0, units: psychoJS.window.units,
+  labels: ["Happy", "Sad", "Anger", "Fear", "Disgust", "Surprise"], fontSize: 0.035, ticks: [],
+  granularity: 1, style: ["RADIO"],
+  color: new util.Color([(-1.0), (-1.0), (-1.0)]), 
+  markerColor: new util.Color([(-1.0), (-1.0), (-1.0)]), 
+  lineColor: new util.Color('White'), 
+  opacity: undefined, fontFamily: 'Noto Sans', bold: true, italic: false, depth: 0, 
+  flip: false,
+});
   
   Likert1txt = new visual.TextStim({
-    win: psychoJS.window,
-    name: 'Likert1txt',
-    text: 'Please indicate which emotion among these six best describes the feeling conveyed by the track.',
-    font: 'Arial',
-    units: undefined, 
-    pos: [0, 0.1], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
-    languageStyle: 'LTR',
-    color: new util.Color('white'),  opacity: undefined,
-    depth: -1.0 
-  });
+  win: psychoJS.window,
+  name: 'Likert1txt',
+  text: 'Please indicate which emotion among these six best describes the feeling conveyed by the track.',
+  font: 'Arial',
+  units: undefined, 
+  pos: [0, 0.1], draggable: false, 
+  height: 0.035,  // smaller text
+  wrapWidth: 1.2, // constrain width so text wraps
+  ori: 0.0,
+  languageStyle: 'LTR',
+  color: new util.Color('white'),  
+  opacity: undefined,
+  depth: -1.0 
+});
   
   Likert2 = new visual.Slider({
-    win: psychoJS.window, name: 'Likert2',
-    startValue: undefined,
-    size: [1.2, 0.1], pos: [0, (- 0.1)], ori: 0.0, units: psychoJS.window.units,
-    labels: ["1", "2", "3", "4", "5"], fontSize: 0.05, ticks: [],
-    granularity: 1, style: ["RADIO"],
-    color: new util.Color([1.0, 1.0, 1.0]), markerColor: new util.Color([(- 1.0), (- 1.0), (- 1.0)]), lineColor: new util.Color('White'), 
-    opacity: 1.0, fontFamily: 'Noto Sans', bold: true, italic: false, depth: -2, 
-    flip: false,
-  });
+  win: psychoJS.window, name: 'Likert2',
+  startValue: undefined,
+  size: [0.9, 0.06], pos: [0, (-0.1)], ori: 0.0, units: psychoJS.window.units,
+  labels: ["1", "2", "3", "4", "5"], fontSize: 0.035, ticks: [],
+  granularity: 1, style: ["RADIO"],
+  color: new util.Color([1.0, 1.0, 1.0]), 
+  markerColor: new util.Color([(-1.0), (-1.0), (-1.0)]), 
+  lineColor: new util.Color('White'), 
+  opacity: 1.0, fontFamily: 'Noto Sans', bold: true, italic: false, depth: -2, 
+  flip: false,
+});
+
   
   Likert2txt = new visual.TextStim({
-    win: psychoJS.window,
-    name: 'Likert2txt',
-    text: 'Indicate on this scale on the intensity of the emotion:',
-    font: 'Arial',
-    units: undefined, 
-    pos: [0, 0.1], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
-    languageStyle: 'LTR',
-    color: new util.Color('white'),  opacity: 1.0,
-    depth: -3.0 
-  });
+  win: psychoJS.window,
+  name: 'Likert2txt',
+  text: 'Indicate on this scale the intensity of the emotion:',
+  font: 'Arial',
+  units: undefined, 
+  pos: [0, 0.1], draggable: false, 
+  height: 0.035,  // smaller
+  wrapWidth: 1.2, // text wraps
+  ori: 0.0,
+  languageStyle: 'LTR',
+  color: new util.Color('white'),  
+  opacity: 1.0,
+  depth: -3.0 
+});
   
   NextTxt = new visual.TextStim({
-    win: psychoJS.window,
-    name: 'NextTxt',
-    text: 'Press SPACEBAR or TAP THE SCREEN to proceed. Use ESC to abandon the experiment...',
-    font: 'Arial',
-    units: undefined, 
-    pos: [0, 0], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
-    languageStyle: 'LTR',
-    color: new util.Color('white'),  opacity: undefined,
-    depth: -4.0 
-  });
+  win: psychoJS.window,
+  name: 'NextTxt',
+  text: 'Press SPACEBAR or TAP THE SCREEN to proceed. Use ESC to abandon the experiment...',
+  font: 'Arial',
+  units: undefined, 
+  pos: [0, 0], draggable: false, 
+  height: 0.035,  // smaller
+  wrapWidth: 1.2, // wraps so it doesn’t stretch too far
+  ori: 0.0,
+  languageStyle: 'LTR',
+  color: new util.Color('white'),  
+  opacity: undefined,
+  depth: -4.0 
+});
   
   NextRes = new core.Keyboard({psychoJS: psychoJS, clock: new util.Clock(), waitForStart: true});
 
@@ -975,7 +992,7 @@ function GoodbyeRoutineBegin(snapshot) {
       }
 
       const lines = [];
-      lines.push("Thank you for participating!\nIn this study, we asked an AI model to create each of the individual music pieces you just heard by giving it one single primary emotion each time.\nLet\'s see if AI did a good job in interpreting which musical tune should correspond to which human emotion:");
+      lines.push("Thank you for participating!\nIn this study, we asked an AI model to create each of the individual music pieces you just heard by giving it one single primary emotion as prompt each time.\nLet\'s see if AI did a good job in interpreting which musical tune should correspond to which human emotion:");
       lines.push("");
 
       if (totalTrials > 0) {
@@ -1000,11 +1017,11 @@ function GoodbyeRoutineBegin(snapshot) {
 
         lines.push("");
         if (totalCorrect === totalTrials) {
-          lines.push("🎉 Perfect score! Looks like AI is doing an Amazing job generating music corresponding to\nprimary emotions that humans can relate to!");
+          lines.push("🎉 Perfect score! Based on your responses, looks like AI is doing an Amazing job generating music corresponding to\nprimary emotions that humans can relate to!");
         } else if (totalCorrect > totalTrials / 2) {
-          lines.push("👍 Good effort! Your emotions matched with more than half of what AI generated when we gave it a parimary emotion.");
+          lines.push("👍 Good effort! Based on your responses, your emotions matched with more than half of what AI generated when we gave it a parimary emotion.");
         } else {
-          lines.push("💡 Looks like AI still needs to catch up on human emotions and how it relates to musical tunes!");
+          lines.push("💡 Based on your responses, looks like AI still needs to catch up on human emotions and how it relates to musical tunes!");
         }
       } else {
         // fallback if nothing recorded
@@ -1012,6 +1029,9 @@ function GoodbyeRoutineBegin(snapshot) {
       }
 
       ThankYou.setText(lines.join("\n"));
+      ThankYou.setHeight(0.03);        // make text smaller
+      ThankYou.wrapWidth = 1.2;     
+      ThankYou.setLineSpacing(1.1);
     } catch (e) {
       console.log("Feedback text build failed:", e);
       // If anything goes wrong, keep whatever text ThankYou already had
