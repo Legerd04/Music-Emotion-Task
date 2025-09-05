@@ -248,7 +248,7 @@ async function experimentInit() {
   ThankYou = new visual.TextStim({
     win: psychoJS.window,
     name: 'ThankYou',
-    text: 'Thank you for participating!\nIn this study, we asked an AI model to create each of the individual music pieces you just heard by giving it one single primary emotion each time.\nLet\'s see if AI is doing a good job in understanding which musical tune should correspond to which human emotion:',
+    text: 'Thank you for participating!\nIn this study, we asked an AI model to create each of the individual music pieces you just heard by giving it one single primary emotion each time.\nLet\'s see if AI did a good job in interpreting which musical tune should correspond to which human emotion:',
     font: 'Arial',
     units: undefined, 
     pos: [0, 0], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
@@ -878,6 +878,34 @@ function Likert_1RoutineEnd(snapshot) {
     psychoJS.experiment.addData('Likert1.rt', Likert1.getRT());
     psychoJS.experiment.addData('Likert2.response', Likert2.getRating());
     psychoJS.experiment.addData('Likert2.rt', Likert2.getRT());
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    // NEW: parse correct emotion from filename
+    let filePath = Songs;  // comes from Excel column
+    let correctEmotion = filePath.split('/')[1].replace('Track.wav', '');
+
+    // Participant’s chosen emotion
+    let chosenEmotion = Likert1.getRating();
+
+    // Check correctness
+    let isCorrect = (chosenEmotion === correctEmotion) ? 1 : 0;
+
+    // Save extra fields
+    psychoJS.experiment.addData('songFile', filePath);
+    psychoJS.experiment.addData('correctEmotion', correctEmotion);
+    psychoJS.experiment.addData('isCorrect', isCorrect);
+
+    // Maintain breakdown
+    if (!psychoJS.experiment.extraInfo.correctByEmotion) {
+      psychoJS.experiment.extraInfo.correctByEmotion = {};
+    }
+    if (!(correctEmotion in psychoJS.experiment.extraInfo.correctByEmotion)) {
+      psychoJS.experiment.extraInfo.correctByEmotion[correctEmotion] = { correct: 0, total: 0 };
+    }
+    psychoJS.experiment.extraInfo.correctByEmotion[correctEmotion].total += 1;
+    psychoJS.experiment.extraInfo.correctByEmotion[correctEmotion].correct += isCorrect;
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // update the trial handler
     if (currentLoop instanceof MultiStairHandler) {
       currentLoop.addResponse(NextRes.corr, level);
@@ -916,11 +944,68 @@ function GoodbyeRoutineBegin(snapshot) {
     // keep track of whether this Routine was forcibly ended
     routineForceEnded = false;
     GoodbyeClock.reset(routineTimer.getTime());
-    routineTimer.add(1200.000000);
+    routineTimer.add(2400.000000);
     GoodbyeMaxDurationReached = false;
     // update component parameters for each repeat
     psychoJS.experiment.addData('Goodbye.started', globalClock.getTime());
     GoodbyeMaxDuration = null
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // === DYNAMIC FEEDBACK TEXT (inserted) ===
+    try {
+      const breakdown = psychoJS.experiment.extraInfo.correctByEmotion || {};
+      let totalCorrect = 0;
+      let totalTrials = 0;
+      for (const emo in breakdown) {
+        totalCorrect += (breakdown[emo]?.correct || 0);
+        totalTrials += (breakdown[emo]?.total || 0);
+      }
+
+      const lines = [];
+      lines.push("Thank you for participating!");
+      lines.push("");
+
+      if (totalTrials > 0) {
+        lines.push(`Overall: ${totalCorrect} out of ${totalTrials} correct.`);
+        lines.push("");
+        lines.push("Breakdown by emotion:");
+
+        // show in a stable order first, then any extras (just in case)
+        const preferredOrder = ["Happy","Sad","Anger","Fear","Disgust","Surprise"];
+        const shown = new Set();
+        for (const emo of preferredOrder) {
+          if (breakdown[emo]) {
+            lines.push(`${emo}: ${breakdown[emo].correct} / ${breakdown[emo].total}`);
+            shown.add(emo);
+          }
+        }
+        for (const emo in breakdown) {
+          if (!shown.has(emo)) {
+            lines.push(`${emo}: ${breakdown[emo].correct} / ${breakdown[emo].total}`);
+          }
+        }
+
+        lines.push("");
+        if (totalCorrect === totalTrials) {
+          lines.push("🎉 Perfect score! Amazing job!");
+        } else if (totalCorrect > totalTrials / 2) {
+          lines.push("👍 Good effort! You identified more than half correctly.");
+        } else {
+          lines.push("💡 Keep practicing, you'll improve!");
+        }
+      } else {
+        // fallback if nothing recorded
+        lines.push("Your results will appear here once trials are completed.");
+      }
+
+      ThankYou.setText(lines.join("\n"));
+    } catch (e) {
+      console.log("Feedback text build failed:", e);
+      // If anything goes wrong, keep whatever text ThankYou already had
+    }
+    // === END INSERT ===
+    /////////////////////////////////////////////////////////////////////////////////
+    
     // keep track of which components have finished
     GoodbyeComponents = [];
     GoodbyeComponents.push(ThankYou);
@@ -956,7 +1041,7 @@ function GoodbyeRoutineEachFrame() {
     if (ThankYou.status === PsychoJS.Status.STARTED) {
     }
     
-    frameRemains = 0 + 20 - psychoJS.window.monitorFramePeriod * 0.75;// most of one frame period left
+    frameRemains = 0 + 40 - psychoJS.window.monitorFramePeriod * 0.75;// most of one frame period left
     if (ThankYou.status === PsychoJS.Status.STARTED && t >= frameRemains) {
       // keep track of stop time/frame for later
       ThankYou.tStop = t;  // not accounting for scr refresh
@@ -1007,7 +1092,7 @@ function GoodbyeRoutineEnd(snapshot) {
         routineTimer.reset();} else if (GoodbyeMaxDurationReached) {
         GoodbyeClock.add(GoodbyeMaxDuration);
     } else {
-        GoodbyeClock.add(1200.000000);
+        GoodbyeClock.add(2400.000000);
     }
     // Routines running outside a loop should always advance the datafile row
     if (currentLoop === psychoJS.experiment) {
