@@ -138,6 +138,7 @@ var Likert2;
 var Likert2txt;
 var NextTxt;
 var NextRes;
+var mouse;
 var GoodbyeClock;
 var ThankYou;
 var globalClock;
@@ -232,7 +233,7 @@ async function experimentInit() {
   NextTxt = new visual.TextStim({
     win: psychoJS.window,
     name: 'NextTxt',
-    text: 'Press SPACEBAR to proceed or ESC to abandon the experiment...',
+    text: 'Press SPACEBAR or TAP THE SCREEN to proceed. Use ESC to abandon the experiment...',
     font: 'Arial',
     units: undefined, 
     pos: [0, 0], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
@@ -242,7 +243,14 @@ async function experimentInit() {
   });
   
   NextRes = new core.Keyboard({psychoJS: psychoJS, clock: new util.Clock(), waitForStart: true});
-  
+
+  /////////////////////////////////////////////////////////////////////////////
+  // initialize pointer/touch fallback for mobile
+  mouse = new core.Mouse({ win: psychoJS.window });
+  mouse.clicked = false;
+  mouse.clickTime = null;
+ /////////////////////////////////////////////////////////////////////////////
+
   // Initialize components for Routine "Goodbye"
   GoodbyeClock = new util.Clock();
   ThankYou = new visual.TextStim({
@@ -360,6 +368,24 @@ function WelcomeScreenRoutineEachFrame() {
         // a response ends the routine
         continueRoutine = false;
       }
+
+      /////////////////////////////////////////////////////////////////////////////////
+      // --- MOBILE/TAP FALLBACK ---
+      if (typeof mouse !== 'undefined') {
+        const now = globalClock.getTime();
+        const buttons = mouse.getPressed();  // [left, middle, right]
+        if (buttons && buttons[0] === 1) {
+          if (!mouse.clickTime || (now - mouse.clickTime) > 0.25) {  // debounce 250ms
+            Welcomekey.keys = 'space';
+            Welcomekey.rt = Welcomekey.clock ? Welcomekey.clock.getTime() : 0;
+            Welcomekey.duration = 0;
+            continueRoutine = false;
+            mouse.clickTime = now;
+          }
+        }
+      }
+      // --- END FALLBACK ---
+      ////////////////////////////////////////////////////////////////////////////////
     }
     
     // check for quit (typically the Esc key)
@@ -835,6 +861,25 @@ function Likert_1RoutineEachFrame() {
         // a response ends the routine
         continueRoutine = false;
       }
+
+      ///////////////////////////////////////////////////////////////////////////
+      // --- MOBILE/TAP FALLBACK ---
+      if (typeof mouse !== 'undefined') {
+        const now = globalClock.getTime();
+        const buttons = mouse.getPressed();  // [left, middle, right]
+        if (buttons && buttons[0] === 1) {
+          if (!mouse.clickTime || (now - mouse.clickTime) > 0.25) {
+            NextRes.keys = 'space';
+            NextRes.rt = NextRes.clock ? NextRes.clock.getTime() : 0;
+            NextRes.duration = 0;
+            continueRoutine = false;
+            mouse.clickTime = now;
+          }
+        }
+      }
+      // --- END FALLBACK ---
+      //////////////////////////////////////////////////////////////////////////
+
     }
     
     // check for quit (typically the Esc key)
