@@ -71,7 +71,7 @@ flowScheduler.add(trialsLoopEnd);
 flowScheduler.add(GoodbyeRoutineBegin());
 flowScheduler.add(GoodbyeRoutineEachFrame());
 flowScheduler.add(GoodbyeRoutineEnd());
-flowScheduler.add(quitPsychoJS, 'Thank you for your patience.', false);
+flowScheduler.add(quitPsychoJS, 'Please share this experiment with your friends if you found this interesting. Goodbye!', false);
 
 // quit if user presses Cancel in dialog box:
 dialogCancelScheduler.add(quitPsychoJS, 'Thank you for your patience.', false);
@@ -138,6 +138,7 @@ var Likert2;
 var Likert2txt;
 var NextTxt;
 var NextRes;
+var mouse;
 var GoodbyeClock;
 var ThankYou;
 var globalClock;
@@ -148,7 +149,7 @@ async function experimentInit() {
   Welcometxt = new visual.TextStim({
     win: psychoJS.window,
     name: 'Welcometxt',
-    text: 'Welcome, and thank you for your participation in this study!\n\n\nIn this task, you will be presented with 6 short instrumental music clips. Each clip will play for approximately 15 seconds. \n\nAfter listening to each clip, you will be asked to respond to two simple questions regarding your experience of the music. There are no right or wrong answers. We are interested in your personal impressions.\n\n Please press SPACEBAR to begin with Track 1.',
+    text: 'Welcome, and thank you for your participation in this study!\n\n\nIn this task, you will be presented with 6 short instrumental music clips. Each clip will play for approximately 15 seconds. \n\nAfter listening to each clip, you will be asked to respond to two simple questions regarding your experience of the music. There are no right or wrong answers. We are interested in your personal impressions.\n\n Please press SPACEBAR or TAP to begin with Track 1.',
     font: 'Arial',
     units: undefined, 
     pos: [0, 0], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
@@ -184,71 +185,95 @@ async function experimentInit() {
   // Initialize components for Routine "Likert_1"
   Likert_1Clock = new util.Clock();
   Likert1 = new visual.Slider({
-    win: psychoJS.window, name: 'Likert1',
-    startValue: undefined,
-    size: [1.2, 0.1], pos: [0, (- 0.1)], ori: 0.0, units: psychoJS.window.units,
-    labels: ["Happy", "Sad", "Anger", "Fear", "Disgust", "Surprise"], fontSize: 0.05, ticks: [],
-    granularity: 1, style: ["RADIO"],
-    color: new util.Color([(- 1.0), (- 1.0), (- 1.0)]), markerColor: new util.Color([(- 1.0), (- 1.0), (- 1.0)]), lineColor: new util.Color('White'), 
-    opacity: undefined, fontFamily: 'Noto Sans', bold: true, italic: false, depth: 0, 
-    flip: false,
-  });
+  win: psychoJS.window, name: 'Likert1',
+  startValue: undefined,
+  size: [0.7, 0.05], pos: [0, (-0.2)], ori: 0.0, units: psychoJS.window.units,
+  labels: ["Happy", "Sad", "Anger", "Fear", "Disgust", "Surprise"], fontSize: 0.025, wrapWidth: 0.1, ticks: [],
+  granularity: 1, style: ["RADIO"],
+  color: new util.Color([(-1.0), (-1.0), (-1.0)]), 
+  markerColor: new util.Color([(-1.0), (-1.0), (-1.0)]), 
+  lineColor: new util.Color('White'), 
+  opacity: undefined, fontFamily: 'Noto Sans', bold: true, italic: false, depth: 0, 
+  flip: false,
+});
   
   Likert1txt = new visual.TextStim({
-    win: psychoJS.window,
-    name: 'Likert1txt',
-    text: 'Please indicate which emotion among these six best describes the feeling conveyed by the track.',
-    font: 'Arial',
-    units: undefined, 
-    pos: [0, 0.1], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
-    languageStyle: 'LTR',
-    color: new util.Color('white'),  opacity: undefined,
-    depth: -1.0 
-  });
+  win: psychoJS.window,
+  name: 'Likert1txt',
+  text: 'Please indicate which emotion among these \nsix best describes\n the feeling conveyed by the track.',
+  font: 'Arial',
+  units: undefined, 
+  pos: [0, 0.1], draggable: false, 
+  height: 0.035,  // smaller text
+  wrapWidth: 1.2, // constrain width so text wraps
+  ori: 0.0,
+  languageStyle: 'LTR',
+  color: new util.Color('white'),  
+  opacity: undefined,
+  depth: -1.0 
+});
   
   Likert2 = new visual.Slider({
-    win: psychoJS.window, name: 'Likert2',
-    startValue: undefined,
-    size: [1.2, 0.1], pos: [0, (- 0.1)], ori: 0.0, units: psychoJS.window.units,
-    labels: ["1", "2", "3", "4", "5"], fontSize: 0.05, ticks: [],
-    granularity: 1, style: ["RADIO"],
-    color: new util.Color([1.0, 1.0, 1.0]), markerColor: new util.Color([(- 1.0), (- 1.0), (- 1.0)]), lineColor: new util.Color('White'), 
-    opacity: 1.0, fontFamily: 'Noto Sans', bold: true, italic: false, depth: -2, 
-    flip: false,
-  });
+  win: psychoJS.window, name: 'Likert2',
+  startValue: undefined,
+  size: [0.9, 0.06], pos: [0, (-0.1)], ori: 0.0, units: psychoJS.window.units,
+  labels: ["1", "2", "3", "4", "5"], fontSize: 0.035, ticks: [],
+  granularity: 1, style: ["RADIO"],
+  color: new util.Color([1.0, 1.0, 1.0]), 
+  markerColor: new util.Color([(-1.0), (-1.0), (-1.0)]), 
+  lineColor: new util.Color('White'), 
+  opacity: 1.0, fontFamily: 'Noto Sans', bold: true, italic: false, depth: -2, 
+  flip: false,
+});
+
   
   Likert2txt = new visual.TextStim({
-    win: psychoJS.window,
-    name: 'Likert2txt',
-    text: 'Indicate on this scale on the intensity of the emotion:',
-    font: 'Arial',
-    units: undefined, 
-    pos: [0, 0.1], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
-    languageStyle: 'LTR',
-    color: new util.Color('white'),  opacity: 1.0,
-    depth: -3.0 
-  });
+  win: psychoJS.window,
+  name: 'Likert2txt',
+  text: 'Indicate on this scale the intensity of the emotion:',
+  font: 'Arial',
+  units: undefined, 
+  pos: [0, 0.1], draggable: false, 
+  height: 0.035,  // smaller
+  wrapWidth: 1.2, // text wraps
+  ori: 0.0,
+  languageStyle: 'LTR',
+  color: new util.Color('white'),  
+  opacity: 1.0,
+  depth: -3.0 
+});
   
   NextTxt = new visual.TextStim({
-    win: psychoJS.window,
-    name: 'NextTxt',
-    text: 'Press SPACEBAR to proceed...',
-    font: 'Arial',
-    units: undefined, 
-    pos: [0, 0], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
-    languageStyle: 'LTR',
-    color: new util.Color('white'),  opacity: undefined,
-    depth: -4.0 
-  });
+  win: psychoJS.window,
+  name: 'NextTxt',
+  text: 'Press SPACEBAR or TAP THE SCREEN to proceed. \nUse ESC to abandon the experiment...',
+  font: 'Arial',
+  units: undefined, 
+  pos: [0, 0], draggable: false, 
+  height: 0.035,  // smaller
+  wrapWidth: 1.2, // wraps so it doesn’t stretch too far
+  ori: 0.0,
+  languageStyle: 'LTR',
+  color: new util.Color('white'),  
+  opacity: undefined,
+  depth: -4.0 
+});
   
   NextRes = new core.Keyboard({psychoJS: psychoJS, clock: new util.Clock(), waitForStart: true});
-  
+
+  /////////////////////////////////////////////////////////////////////////////
+  // initialize pointer/touch fallback for mobile
+  mouse = new core.Mouse({ win: psychoJS.window });
+  mouse.clicked = false;
+  mouse.clickTime = null;
+ /////////////////////////////////////////////////////////////////////////////
+
   // Initialize components for Routine "Goodbye"
   GoodbyeClock = new util.Clock();
   ThankYou = new visual.TextStim({
     win: psychoJS.window,
     name: 'ThankYou',
-    text: 'Thank you for participating!',
+    text: 'Thank you for participating!\nIn this study, we asked an AI model to create each of the individual music pieces you just heard by giving it one single primary emotion each time.\nLet\'s see if AI did a good job in interpreting which musical tune should correspond to which human emotion:',
     font: 'Arial',
     units: undefined, 
     pos: [0, 0], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
@@ -308,79 +333,99 @@ function WelcomeScreenRoutineBegin(snapshot) {
 function WelcomeScreenRoutineEachFrame() {
   return async function () {
     //--- Loop for each frame of Routine 'WelcomeScreen' ---
-    // get current time
     t = WelcomeScreenClock.getTime();
-    frameN = frameN + 1;// number of completed frames (so 0 is the first frame)
-    // update/draw components on each frame
-    
+    frameN = frameN + 1;
+
     // *Welcometxt* updates
     if (t >= 0 && Welcometxt.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      Welcometxt.tStart = t;  // (not accounting for frame time here)
-      Welcometxt.frameNStart = frameN;  // exact frame index
-      
+      Welcometxt.tStart = t;
+      Welcometxt.frameNStart = frameN;
       Welcometxt.setAutoDraw(true);
     }
-    
-    
-    // if Welcometxt is active this frame...
-    if (Welcometxt.status === PsychoJS.Status.STARTED) {
-    }
-    
+
     if (Welcometxt.status === PsychoJS.Status.STARTED && Boolean((Welcomekey.keys == 'space'))) {
-      // keep track of stop time/frame for later
-      Welcometxt.tStop = t;  // not accounting for scr refresh
-      Welcometxt.frameNStop = frameN;  // exact frame index
-      // update status
+      Welcometxt.tStop = t;
+      Welcometxt.frameNStop = frameN;
       Welcometxt.status = PsychoJS.Status.FINISHED;
       Welcometxt.setAutoDraw(false);
     }
-    
-    
+
     // *Welcomekey* updates
     if (t >= 0 && Welcomekey.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      Welcomekey.tStart = t;  // (not accounting for frame time here)
-      Welcomekey.frameNStart = frameN;  // exact frame index
-      
-      // keyboard checking is just starting
-      psychoJS.window.callOnFlip(function() { Welcomekey.clock.reset(); });  // t=0 on next screen flip
-      psychoJS.window.callOnFlip(function() { Welcomekey.start(); }); // start on screen flip
+      Welcomekey.tStart = t;
+      Welcomekey.frameNStart = frameN;
+      psychoJS.window.callOnFlip(function() { Welcomekey.clock.reset(); });
+      psychoJS.window.callOnFlip(function() { Welcomekey.start(); });
       psychoJS.window.callOnFlip(function() { Welcomekey.clearEvents(); });
     }
-    
-    // if Welcomekey is active this frame...
+
     if (Welcomekey.status === PsychoJS.Status.STARTED) {
       let theseKeys = Welcomekey.getKeys({keyList: ['space'], waitRelease: false});
       _Welcomekey_allKeys = _Welcomekey_allKeys.concat(theseKeys);
       if (_Welcomekey_allKeys.length > 0) {
-        Welcomekey.keys = _Welcomekey_allKeys[_Welcomekey_allKeys.length - 1].name;  // just the last key pressed
+        Welcomekey.keys = _Welcomekey_allKeys[_Welcomekey_allKeys.length - 1].name;
         Welcomekey.rt = _Welcomekey_allKeys[_Welcomekey_allKeys.length - 1].rt;
         Welcomekey.duration = _Welcomekey_allKeys[_Welcomekey_allKeys.length - 1].duration;
-        // a response ends the routine
+
+        // --- AUDIO UNLOCK on key press ---
+        if (psychoJS.window.audioContext && psychoJS.window.audioContext.state === 'suspended') {
+          await psychoJS.window.audioContext.resume();
+          const dummy = psychoJS.window.audioContext.createBufferSource();
+          dummy.buffer = psychoJS.window.audioContext.createBuffer(1, 1, 22050);
+          dummy.connect(psychoJS.window.audioContext.destination);
+          dummy.start();
+        }
+
         continueRoutine = false;
       }
+
+      ///////////////////////////////////////////////////////////////////////////
+      // --- MOBILE/TAP FALLBACK ---
+      if (typeof mouse !== 'undefined') {
+        const now = globalClock.getTime();
+        const buttons = mouse.getPressed();  // [left, middle, right]
+        if (buttons && buttons[0] === 1) {
+          if (!mouse.clickTime || (now - mouse.clickTime) > 0.25) {
+            Welcomekey.keys = 'space';
+            Welcomekey.rt = Welcomekey.clock ? Welcomekey.clock.getTime() : 0;
+            Welcomekey.duration = 0;
+
+            // --- AUDIO UNLOCK on tap ---
+            if (psychoJS.window.audioContext && psychoJS.window.audioContext.state === 'suspended') {
+              await psychoJS.window.audioContext.resume();
+              const dummy = psychoJS.window.audioContext.createBufferSource();
+              dummy.buffer = psychoJS.window.audioContext.createBuffer(1, 1, 22050);
+              dummy.connect(psychoJS.window.audioContext.destination);
+              dummy.start();
+            }
+
+            continueRoutine = false;
+            mouse.clickTime = now;
+          }
+        }
+      }
+      // --- END FALLBACK ---
+      ///////////////////////////////////////////////////////////////////////////
     }
-    
-    // check for quit (typically the Esc key)
-    if (psychoJS.experiment.experimentEnded || psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
+
+    // quit check
+    if (psychoJS.experiment.experimentEnded ||
+        psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
       return quitPsychoJS('The [Escape] key was pressed. Goodbye!', false);
     }
-    
-    // check if the Routine should terminate
-    if (!continueRoutine) {  // a component has requested a forced-end of Routine
+
+    if (!continueRoutine) {
       routineForceEnded = true;
       return Scheduler.Event.NEXT;
     }
-    
-    continueRoutine = false;  // reverts to True if at least one component still running
+
+    continueRoutine = false;
     for (const thisComponent of WelcomeScreenComponents)
       if ('status' in thisComponent && thisComponent.status !== PsychoJS.Status.FINISHED) {
         continueRoutine = true;
         break;
       }
-    
-    // refresh the screen if continuing
+
     if (continueRoutine) {
       return Scheduler.Event.FLIP_REPEAT;
     } else {
@@ -388,6 +433,8 @@ function WelcomeScreenRoutineEachFrame() {
     }
   };
 }
+
+
 
 
 function WelcomeScreenRoutineEnd(snapshot) {
@@ -683,179 +730,161 @@ function Likert_1RoutineBegin(snapshot) {
 function Likert_1RoutineEachFrame() {
   return async function () {
     //--- Loop for each frame of Routine 'Likert_1' ---
-    // get current time
     t = Likert_1Clock.getTime();
-    frameN = frameN + 1;// number of completed frames (so 0 is the first frame)
-    // update/draw components on each frame
-    
+    frameN = frameN + 1;
+
     // *Likert1* updates
     if (t >= 0.0 && Likert1.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      Likert1.tStart = t;  // (not accounting for frame time here)
-      Likert1.frameNStart = frameN;  // exact frame index
-      
+      Likert1.tStart = t;
+      Likert1.frameNStart = frameN;
       Likert1.setAutoDraw(true);
     }
-    
-    
-    // if Likert1 is active this frame...
-    if (Likert1.status === PsychoJS.Status.STARTED) {
-    }
-    
+
     if (Likert1.status === PsychoJS.Status.STARTED && Boolean((Likert1.getRating() != null))) {
-      // keep track of stop time/frame for later
-      Likert1.tStop = t;  // not accounting for scr refresh
-      Likert1.frameNStop = frameN;  // exact frame index
-      // update status
+      Likert1.tStop = t;
+      Likert1.frameNStop = frameN;
       Likert1.status = PsychoJS.Status.FINISHED;
       Likert1.setAutoDraw(false);
     }
-    
-    
+
     // *Likert1txt* updates
     if (t >= 0.0 && Likert1txt.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      Likert1txt.tStart = t;  // (not accounting for frame time here)
-      Likert1txt.frameNStart = frameN;  // exact frame index
-      
+      Likert1txt.tStart = t;
+      Likert1txt.frameNStart = frameN;
       Likert1txt.setAutoDraw(true);
     }
-    
-    
-    // if Likert1txt is active this frame...
-    if (Likert1txt.status === PsychoJS.Status.STARTED) {
-    }
-    
+
     if (Likert1txt.status === PsychoJS.Status.STARTED && Boolean((Likert1.getRating() != null))) {
-      // keep track of stop time/frame for later
-      Likert1txt.tStop = t;  // not accounting for scr refresh
-      Likert1txt.frameNStop = frameN;  // exact frame index
-      // update status
+      Likert1txt.tStop = t;
+      Likert1txt.frameNStop = frameN;
       Likert1txt.status = PsychoJS.Status.FINISHED;
       Likert1txt.setAutoDraw(false);
     }
-    
-    
+
     // *Likert2* updates
     if (((Likert1.getRating() != null)) && Likert2.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      Likert2.tStart = t;  // (not accounting for frame time here)
-      Likert2.frameNStart = frameN;  // exact frame index
-      
+      Likert2.tStart = t;
+      Likert2.frameNStart = frameN;
       Likert2.setAutoDraw(true);
     }
-    
-    
-    // if Likert2 is active this frame...
-    if (Likert2.status === PsychoJS.Status.STARTED) {
-    }
-    
+
     if (Likert2.status === PsychoJS.Status.STARTED && Boolean((Likert2.getRating() != null))) {
-      // keep track of stop time/frame for later
-      Likert2.tStop = t;  // not accounting for scr refresh
-      Likert2.frameNStop = frameN;  // exact frame index
-      // update status
+      Likert2.tStop = t;
+      Likert2.frameNStop = frameN;
       Likert2.status = PsychoJS.Status.FINISHED;
       Likert2.setAutoDraw(false);
     }
-    
-    
+
     // Check Likert2 for response to end Routine
     if (Likert2.getRating() !== undefined && Likert2.status === PsychoJS.Status.STARTED) {
-      continueRoutine = false; }
-    
+      continueRoutine = false;
+    }
+
     // *Likert2txt* updates
     if (((Likert1.getRating() != null)) && Likert2txt.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      Likert2txt.tStart = t;  // (not accounting for frame time here)
-      Likert2txt.frameNStart = frameN;  // exact frame index
-      
+      Likert2txt.tStart = t;
+      Likert2txt.frameNStart = frameN;
       Likert2txt.setAutoDraw(true);
     }
-    
-    
-    // if Likert2txt is active this frame...
-    if (Likert2txt.status === PsychoJS.Status.STARTED) {
-    }
-    
+
     if (Likert2txt.status === PsychoJS.Status.STARTED && Boolean((Likert2.getRating() != null))) {
-      // keep track of stop time/frame for later
-      Likert2txt.tStop = t;  // not accounting for scr refresh
-      Likert2txt.frameNStop = frameN;  // exact frame index
-      // update status
+      Likert2txt.tStop = t;
+      Likert2txt.frameNStop = frameN;
       Likert2txt.status = PsychoJS.Status.FINISHED;
       Likert2txt.setAutoDraw(false);
     }
-    
-    
+
     // *NextTxt* updates
     if (((Likert2.getRating() != null)) && NextTxt.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      NextTxt.tStart = t;  // (not accounting for frame time here)
-      NextTxt.frameNStart = frameN;  // exact frame index
-      
+      NextTxt.tStart = t;
+      NextTxt.frameNStart = frameN;
       NextTxt.setAutoDraw(true);
     }
-    
-    
-    // if NextTxt is active this frame...
-    if (NextTxt.status === PsychoJS.Status.STARTED) {
-    }
-    
+
     if (NextTxt.status === PsychoJS.Status.STARTED && Boolean((NextRes.keys == 'space'))) {
-      // keep track of stop time/frame for later
-      NextTxt.tStop = t;  // not accounting for scr refresh
-      NextTxt.frameNStop = frameN;  // exact frame index
-      // update status
+      NextTxt.tStop = t;
+      NextTxt.frameNStop = frameN;
       NextTxt.status = PsychoJS.Status.FINISHED;
       NextTxt.setAutoDraw(false);
     }
-    
-    
+
     // *NextRes* updates
     if (((Likert2.getRating() != null)) && NextRes.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      NextRes.tStart = t;  // (not accounting for frame time here)
-      NextRes.frameNStart = frameN;  // exact frame index
-      
-      // keyboard checking is just starting
-      psychoJS.window.callOnFlip(function() { NextRes.clock.reset(); });  // t=0 on next screen flip
-      psychoJS.window.callOnFlip(function() { NextRes.start(); }); // start on screen flip
+      NextRes.tStart = t;
+      NextRes.frameNStart = frameN;
+
+      psychoJS.window.callOnFlip(function() { NextRes.clock.reset(); });
+      psychoJS.window.callOnFlip(function() { NextRes.start(); });
       psychoJS.window.callOnFlip(function() { NextRes.clearEvents(); });
     }
-    
-    // if NextRes is active this frame...
+
     if (NextRes.status === PsychoJS.Status.STARTED) {
       let theseKeys = NextRes.getKeys({keyList: ['space'], waitRelease: false});
       _NextRes_allKeys = _NextRes_allKeys.concat(theseKeys);
       if (_NextRes_allKeys.length > 0) {
-        NextRes.keys = _NextRes_allKeys[_NextRes_allKeys.length - 1].name;  // just the last key pressed
+        NextRes.keys = _NextRes_allKeys[_NextRes_allKeys.length - 1].name;
         NextRes.rt = _NextRes_allKeys[_NextRes_allKeys.length - 1].rt;
         NextRes.duration = _NextRes_allKeys[_NextRes_allKeys.length - 1].duration;
-        // a response ends the routine
+
+        // --- AUDIO UNLOCK on key press ---
+        if (psychoJS.window.audioContext && psychoJS.window.audioContext.state === 'suspended') {
+          await psychoJS.window.audioContext.resume();
+          const dummy = psychoJS.window.audioContext.createBufferSource();
+          dummy.buffer = psychoJS.window.audioContext.createBuffer(1, 1, 22050);
+          dummy.connect(psychoJS.window.audioContext.destination);
+          dummy.start();
+        }
+
         continueRoutine = false;
       }
+
+      ///////////////////////////////////////////////////////////////////////////
+      // --- MOBILE/TAP FALLBACK ---
+      if (typeof mouse !== 'undefined') {
+        const now = globalClock.getTime();
+        const buttons = mouse.getPressed();  // [left, middle, right]
+        if (buttons && buttons[0] === 1) {
+          if (!mouse.clickTime || (now - mouse.clickTime) > 0.25) {
+            NextRes.keys = 'space';
+            NextRes.rt = NextRes.clock ? NextRes.clock.getTime() : 0;
+            NextRes.duration = 0;
+
+            // --- AUDIO UNLOCK on tap ---
+            if (psychoJS.window.audioContext && psychoJS.window.audioContext.state === 'suspended') {
+              await psychoJS.window.audioContext.resume();
+              const dummy = psychoJS.window.audioContext.createBufferSource();
+              dummy.buffer = psychoJS.window.audioContext.createBuffer(1, 1, 22050);
+              dummy.connect(psychoJS.window.audioContext.destination);
+              dummy.start();
+            }
+
+            continueRoutine = false;
+            mouse.clickTime = now;
+          }
+        }
+      }
+      // --- END FALLBACK ---
+      ///////////////////////////////////////////////////////////////////////////
     }
-    
-    // check for quit (typically the Esc key)
-    if (psychoJS.experiment.experimentEnded || psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
+
+    // quit check
+    if (psychoJS.experiment.experimentEnded ||
+        psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
       return quitPsychoJS('The [Escape] key was pressed. Goodbye!', false);
     }
-    
-    // check if the Routine should terminate
-    if (!continueRoutine) {  // a component has requested a forced-end of Routine
+
+    if (!continueRoutine) {
       routineForceEnded = true;
       return Scheduler.Event.NEXT;
     }
-    
-    continueRoutine = false;  // reverts to True if at least one component still running
+
+    continueRoutine = false;
     for (const thisComponent of Likert_1Components)
       if ('status' in thisComponent && thisComponent.status !== PsychoJS.Status.FINISHED) {
         continueRoutine = true;
         break;
       }
-    
-    // refresh the screen if continuing
+
     if (continueRoutine) {
       return Scheduler.Event.FLIP_REPEAT;
     } else {
@@ -863,6 +892,7 @@ function Likert_1RoutineEachFrame() {
     }
   };
 }
+
 
 
 function Likert_1RoutineEnd(snapshot) {
@@ -878,6 +908,34 @@ function Likert_1RoutineEnd(snapshot) {
     psychoJS.experiment.addData('Likert1.rt', Likert1.getRT());
     psychoJS.experiment.addData('Likert2.response', Likert2.getRating());
     psychoJS.experiment.addData('Likert2.rt', Likert2.getRT());
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    // NEW: parse correct emotion from filename
+    let filePath = Songs;  // comes from Excel column
+    let correctEmotion = filePath.split('/')[1].replace('Track.wav', '');
+
+    // Participant’s chosen emotion
+    let chosenEmotion = Likert1.getRating();
+
+    // Check correctness
+    let isCorrect = (chosenEmotion === correctEmotion) ? 1 : 0;
+
+    // Save extra fields
+    psychoJS.experiment.addData('songFile', filePath);
+    psychoJS.experiment.addData('correctEmotion', correctEmotion);
+    psychoJS.experiment.addData('isCorrect', isCorrect);
+
+    // Maintain breakdown
+    if (!psychoJS.experiment.extraInfo.correctByEmotion) {
+      psychoJS.experiment.extraInfo.correctByEmotion = {};
+    }
+    if (!(correctEmotion in psychoJS.experiment.extraInfo.correctByEmotion)) {
+      psychoJS.experiment.extraInfo.correctByEmotion[correctEmotion] = { correct: 0, total: 0 };
+    }
+    psychoJS.experiment.extraInfo.correctByEmotion[correctEmotion].total += 1;
+    psychoJS.experiment.extraInfo.correctByEmotion[correctEmotion].correct += isCorrect;
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // update the trial handler
     if (currentLoop instanceof MultiStairHandler) {
       currentLoop.addResponse(NextRes.corr, level);
@@ -916,11 +974,71 @@ function GoodbyeRoutineBegin(snapshot) {
     // keep track of whether this Routine was forcibly ended
     routineForceEnded = false;
     GoodbyeClock.reset(routineTimer.getTime());
-    routineTimer.add(5.000000);
+    routineTimer.add(1800.000000);
     GoodbyeMaxDurationReached = false;
     // update component parameters for each repeat
     psychoJS.experiment.addData('Goodbye.started', globalClock.getTime());
     GoodbyeMaxDuration = null
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // === DYNAMIC FEEDBACK TEXT (inserted) ===
+    try {
+      const breakdown = psychoJS.experiment.extraInfo.correctByEmotion || {};
+      let totalCorrect = 0;
+      let totalTrials = 0;
+      for (const emo in breakdown) {
+        totalCorrect += (breakdown[emo]?.correct || 0);
+        totalTrials += (breakdown[emo]?.total || 0);
+      }
+
+      const lines = [];
+      lines.push("Thank you for participating!\nIn this study, we asked an AI model to create each of the individual music pieces\n you just heard by giving it one single primary emotion as prompt each time.\nLet\'s see if AI did a good job in interpreting \nwhich musical tune should correspond to which human emotion:");
+      lines.push("");
+
+      if (totalTrials > 0) {
+        lines.push(`Overall: ${totalCorrect} out of ${totalTrials} emotions matched.`);
+        lines.push("");
+        lines.push("Breakdown by emotion:");
+
+        // show in a stable order first, then any extras (just in case)
+        const preferredOrder = ["Happy","Sad","Anger","Fear","Disgust","Surprise"];
+        const shown = new Set();
+        for (const emo of preferredOrder) {
+          if (breakdown[emo]) {
+            lines.push(`${emo}: ${breakdown[emo].correct} / ${breakdown[emo].total}`);
+            shown.add(emo);
+          }
+        }
+        for (const emo in breakdown) {
+          if (!shown.has(emo)) {
+            lines.push(`${emo}: ${breakdown[emo].correct} / ${breakdown[emo].total}`);
+          }
+        }
+
+        lines.push("");
+        if (totalCorrect === totalTrials) {
+          lines.push("🎉 Perfect score! Based on your responses, looks like \nAI\'s understanding of music perfectly aligns with the correlation of human emotion and embodied music cognition!");
+        } else if (totalCorrect > totalTrials / 2) {
+          lines.push("👍 Good effort! Based on your responses, more than \nhalf of the time AI\'s music-understanding aligns perfectly with the correlation of human emotion and embodied music cognition!");
+        } else {
+          lines.push("💡 Based on your responses, looks like AI\'s music understanding alignment is non-ideal for \nthe correlation of human emotion and embodied music cognition!");
+        }
+      } else {
+        // fallback if nothing recorded
+        lines.push("Your results will appear here once trials are completed.");
+      }
+
+      ThankYou.setText(lines.join("\n"));
+      ThankYou.setHeight(0.03);        // make text smaller
+      ThankYou.wrapWidth = 1.2;     
+      ThankYou.setLineSpacing(1.1);
+    } catch (e) {
+      console.log("Feedback text build failed:", e);
+      // If anything goes wrong, keep whatever text ThankYou already had
+    }
+    // === END INSERT ===
+    /////////////////////////////////////////////////////////////////////////////////
+
     // keep track of which components have finished
     GoodbyeComponents = [];
     GoodbyeComponents.push(ThankYou);
@@ -956,7 +1074,7 @@ function GoodbyeRoutineEachFrame() {
     if (ThankYou.status === PsychoJS.Status.STARTED) {
     }
     
-    frameRemains = 0 + 5 - psychoJS.window.monitorFramePeriod * 0.75;// most of one frame period left
+    frameRemains = 0 + 30 - psychoJS.window.monitorFramePeriod * 0.75;// most of one frame period left
     if (ThankYou.status === PsychoJS.Status.STARTED && t >= frameRemains) {
       // keep track of stop time/frame for later
       ThankYou.tStop = t;  // not accounting for scr refresh
@@ -1007,7 +1125,7 @@ function GoodbyeRoutineEnd(snapshot) {
         routineTimer.reset();} else if (GoodbyeMaxDurationReached) {
         GoodbyeClock.add(GoodbyeMaxDuration);
     } else {
-        GoodbyeClock.add(5.000000);
+        GoodbyeClock.add(1800.000000);
     }
     // Routines running outside a loop should always advance the datafile row
     if (currentLoop === psychoJS.experiment) {
