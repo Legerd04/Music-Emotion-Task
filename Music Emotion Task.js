@@ -316,104 +316,99 @@ function WelcomeScreenRoutineBegin(snapshot) {
 function WelcomeScreenRoutineEachFrame() {
   return async function () {
     //--- Loop for each frame of Routine 'WelcomeScreen' ---
-    // get current time
     t = WelcomeScreenClock.getTime();
-    frameN = frameN + 1;// number of completed frames (so 0 is the first frame)
-    // update/draw components on each frame
-    
+    frameN = frameN + 1;
+
     // *Welcometxt* updates
     if (t >= 0 && Welcometxt.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      Welcometxt.tStart = t;  // (not accounting for frame time here)
-      Welcometxt.frameNStart = frameN;  // exact frame index
-      
+      Welcometxt.tStart = t;
+      Welcometxt.frameNStart = frameN;
       Welcometxt.setAutoDraw(true);
     }
-    
-    
-    // if Welcometxt is active this frame...
-    if (Welcometxt.status === PsychoJS.Status.STARTED) {
-    }
-    
+
     if (Welcometxt.status === PsychoJS.Status.STARTED && Boolean((Welcomekey.keys == 'space'))) {
-      // keep track of stop time/frame for later
-      Welcometxt.tStop = t;  // not accounting for scr refresh
-      Welcometxt.frameNStop = frameN;  // exact frame index
-      // update status
+      Welcometxt.tStop = t;
+      Welcometxt.frameNStop = frameN;
       Welcometxt.status = PsychoJS.Status.FINISHED;
       Welcometxt.setAutoDraw(false);
     }
-    
-    
+
     // *Welcomekey* updates
     if (t >= 0 && Welcomekey.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      Welcomekey.tStart = t;  // (not accounting for frame time here)
-      Welcomekey.frameNStart = frameN;  // exact frame index
-      
-      // keyboard checking is just starting
-      psychoJS.window.callOnFlip(function() { Welcomekey.clock.reset(); });  // t=0 on next screen flip
-      psychoJS.window.callOnFlip(function() { Welcomekey.start(); }); // start on screen flip
+      Welcomekey.tStart = t;
+      Welcomekey.frameNStart = frameN;
+      psychoJS.window.callOnFlip(function() { Welcomekey.clock.reset(); });
+      psychoJS.window.callOnFlip(function() { Welcomekey.start(); });
       psychoJS.window.callOnFlip(function() { Welcomekey.clearEvents(); });
     }
-    
-    // if Welcomekey is active this frame...
-    let tapDetected = false;
+
     if (Welcomekey.status === PsychoJS.Status.STARTED) {
       let theseKeys = Welcomekey.getKeys({keyList: ['space'], waitRelease: false});
       _Welcomekey_allKeys = _Welcomekey_allKeys.concat(theseKeys);
       if (_Welcomekey_allKeys.length > 0) {
-        Welcomekey.keys = _Welcomekey_allKeys[_Welcomekey_allKeys.length - 1].name;  // just the last key pressed
+        Welcomekey.keys = _Welcomekey_allKeys[_Welcomekey_allKeys.length - 1].name;
         Welcomekey.rt = _Welcomekey_allKeys[_Welcomekey_allKeys.length - 1].rt;
         Welcomekey.duration = _Welcomekey_allKeys[_Welcomekey_allKeys.length - 1].duration;
-        // a response ends the routine
+
+        // --- AUDIO UNLOCK on key press ---
+        if (psychoJS.window.audioContext && psychoJS.window.audioContext.state === 'suspended') {
+          await psychoJS.window.audioContext.resume();
+          const dummy = psychoJS.window.audioContext.createBufferSource();
+          dummy.buffer = psychoJS.window.audioContext.createBuffer(1, 1, 22050);
+          dummy.connect(psychoJS.window.audioContext.destination);
+          dummy.start();
+        }
+
         continueRoutine = false;
       }
 
-      /////////////////////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////////////////
       // --- MOBILE/TAP FALLBACK ---
       if (typeof mouse !== 'undefined') {
         const now = globalClock.getTime();
         const buttons = mouse.getPressed();  // [left, middle, right]
         if (buttons && buttons[0] === 1) {
-          if (!mouse.clickTime || (now - mouse.clickTime) > 0.25) {  // debounce 250ms
+          if (!mouse.clickTime || (now - mouse.clickTime) > 0.25) {
             Welcomekey.keys = 'space';
             Welcomekey.rt = Welcomekey.clock ? Welcomekey.clock.getTime() : 0;
             Welcomekey.duration = 0;
-            tapDetected = true;
+
+            // --- AUDIO UNLOCK on tap ---
+            if (psychoJS.window.audioContext && psychoJS.window.audioContext.state === 'suspended') {
+              await psychoJS.window.audioContext.resume();
+              const dummy = psychoJS.window.audioContext.createBufferSource();
+              dummy.buffer = psychoJS.window.audioContext.createBuffer(1, 1, 22050);
+              dummy.connect(psychoJS.window.audioContext.destination);
+              dummy.start();
+            }
+
             continueRoutine = false;
             mouse.clickTime = now;
           }
         }
       }
       // --- END FALLBACK ---
-      if ((!continueRoutine && ( _Welcomekey_allKeys.length > 0 || tapDetected )) &&
-          psychoJS.window.audioContext &&
-          psychoJS.window.audioContext.state === 'suspended') {
-        psychoJS.window.audioContext.resume();
-      }
-      ////////////////////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////////////////
     }
-    
-    // check for quit (typically the Esc key)
-    if (psychoJS.experiment.experimentEnded || psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
+
+    // quit check
+    if (psychoJS.experiment.experimentEnded ||
+        psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
       return quitPsychoJS('The [Escape] key was pressed. Goodbye!', false);
     }
-    
-    // check if the Routine should terminate
-    if (!continueRoutine) {  // a component has requested a forced-end of Routine
+
+    if (!continueRoutine) {
       routineForceEnded = true;
       return Scheduler.Event.NEXT;
     }
-    
-    continueRoutine = false;  // reverts to True if at least one component still running
+
+    continueRoutine = false;
     for (const thisComponent of WelcomeScreenComponents)
       if ('status' in thisComponent && thisComponent.status !== PsychoJS.Status.FINISHED) {
         continueRoutine = true;
         break;
       }
-    
-    // refresh the screen if continuing
+
     if (continueRoutine) {
       return Scheduler.Event.FLIP_REPEAT;
     } else {
@@ -421,6 +416,8 @@ function WelcomeScreenRoutineEachFrame() {
     }
   };
 }
+
+
 
 
 function WelcomeScreenRoutineEnd(snapshot) {
@@ -716,156 +713,111 @@ function Likert_1RoutineBegin(snapshot) {
 function Likert_1RoutineEachFrame() {
   return async function () {
     //--- Loop for each frame of Routine 'Likert_1' ---
-    // get current time
     t = Likert_1Clock.getTime();
-    frameN = frameN + 1;// number of completed frames (so 0 is the first frame)
-    // update/draw components on each frame
-    
+    frameN = frameN + 1;
+
     // *Likert1* updates
     if (t >= 0.0 && Likert1.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      Likert1.tStart = t;  // (not accounting for frame time here)
-      Likert1.frameNStart = frameN;  // exact frame index
-      
+      Likert1.tStart = t;
+      Likert1.frameNStart = frameN;
       Likert1.setAutoDraw(true);
     }
-    
-    
-    // if Likert1 is active this frame...
-    if (Likert1.status === PsychoJS.Status.STARTED) {
-    }
-    
+
     if (Likert1.status === PsychoJS.Status.STARTED && Boolean((Likert1.getRating() != null))) {
-      // keep track of stop time/frame for later
-      Likert1.tStop = t;  // not accounting for scr refresh
-      Likert1.frameNStop = frameN;  // exact frame index
-      // update status
+      Likert1.tStop = t;
+      Likert1.frameNStop = frameN;
       Likert1.status = PsychoJS.Status.FINISHED;
       Likert1.setAutoDraw(false);
     }
-    
-    
+
     // *Likert1txt* updates
     if (t >= 0.0 && Likert1txt.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      Likert1txt.tStart = t;  // (not accounting for frame time here)
-      Likert1txt.frameNStart = frameN;  // exact frame index
-      
+      Likert1txt.tStart = t;
+      Likert1txt.frameNStart = frameN;
       Likert1txt.setAutoDraw(true);
     }
-    
-    
-    // if Likert1txt is active this frame...
-    if (Likert1txt.status === PsychoJS.Status.STARTED) {
-    }
-    
+
     if (Likert1txt.status === PsychoJS.Status.STARTED && Boolean((Likert1.getRating() != null))) {
-      // keep track of stop time/frame for later
-      Likert1txt.tStop = t;  // not accounting for scr refresh
-      Likert1txt.frameNStop = frameN;  // exact frame index
-      // update status
+      Likert1txt.tStop = t;
+      Likert1txt.frameNStop = frameN;
       Likert1txt.status = PsychoJS.Status.FINISHED;
       Likert1txt.setAutoDraw(false);
     }
-    
-    
+
     // *Likert2* updates
     if (((Likert1.getRating() != null)) && Likert2.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      Likert2.tStart = t;  // (not accounting for frame time here)
-      Likert2.frameNStart = frameN;  // exact frame index
-      
+      Likert2.tStart = t;
+      Likert2.frameNStart = frameN;
       Likert2.setAutoDraw(true);
     }
-    
-    
-    // if Likert2 is active this frame...
-    if (Likert2.status === PsychoJS.Status.STARTED) {
-    }
-    
+
     if (Likert2.status === PsychoJS.Status.STARTED && Boolean((Likert2.getRating() != null))) {
-      // keep track of stop time/frame for later
-      Likert2.tStop = t;  // not accounting for scr refresh
-      Likert2.frameNStop = frameN;  // exact frame index
-      // update status
+      Likert2.tStop = t;
+      Likert2.frameNStop = frameN;
       Likert2.status = PsychoJS.Status.FINISHED;
       Likert2.setAutoDraw(false);
     }
-    
-    
+
     // Check Likert2 for response to end Routine
     if (Likert2.getRating() !== undefined && Likert2.status === PsychoJS.Status.STARTED) {
-      continueRoutine = false; }
-    
+      continueRoutine = false;
+    }
+
     // *Likert2txt* updates
     if (((Likert1.getRating() != null)) && Likert2txt.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      Likert2txt.tStart = t;  // (not accounting for frame time here)
-      Likert2txt.frameNStart = frameN;  // exact frame index
-      
+      Likert2txt.tStart = t;
+      Likert2txt.frameNStart = frameN;
       Likert2txt.setAutoDraw(true);
     }
-    
-    
-    // if Likert2txt is active this frame...
-    if (Likert2txt.status === PsychoJS.Status.STARTED) {
-    }
-    
+
     if (Likert2txt.status === PsychoJS.Status.STARTED && Boolean((Likert2.getRating() != null))) {
-      // keep track of stop time/frame for later
-      Likert2txt.tStop = t;  // not accounting for scr refresh
-      Likert2txt.frameNStop = frameN;  // exact frame index
-      // update status
+      Likert2txt.tStop = t;
+      Likert2txt.frameNStop = frameN;
       Likert2txt.status = PsychoJS.Status.FINISHED;
       Likert2txt.setAutoDraw(false);
     }
-    
-    
+
     // *NextTxt* updates
     if (((Likert2.getRating() != null)) && NextTxt.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      NextTxt.tStart = t;  // (not accounting for frame time here)
-      NextTxt.frameNStart = frameN;  // exact frame index
-      
+      NextTxt.tStart = t;
+      NextTxt.frameNStart = frameN;
       NextTxt.setAutoDraw(true);
     }
-    
-    
-    // if NextTxt is active this frame...
-    if (NextTxt.status === PsychoJS.Status.STARTED) {
-    }
-    
+
     if (NextTxt.status === PsychoJS.Status.STARTED && Boolean((NextRes.keys == 'space'))) {
-      // keep track of stop time/frame for later
-      NextTxt.tStop = t;  // not accounting for scr refresh
-      NextTxt.frameNStop = frameN;  // exact frame index
-      // update status
+      NextTxt.tStop = t;
+      NextTxt.frameNStop = frameN;
       NextTxt.status = PsychoJS.Status.FINISHED;
       NextTxt.setAutoDraw(false);
     }
-    
-    
+
     // *NextRes* updates
     if (((Likert2.getRating() != null)) && NextRes.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-      NextRes.tStart = t;  // (not accounting for frame time here)
-      NextRes.frameNStart = frameN;  // exact frame index
-      
-      // keyboard checking is just starting
-      psychoJS.window.callOnFlip(function() { NextRes.clock.reset(); });  // t=0 on next screen flip
-      psychoJS.window.callOnFlip(function() { NextRes.start(); }); // start on screen flip
+      NextRes.tStart = t;
+      NextRes.frameNStart = frameN;
+
+      psychoJS.window.callOnFlip(function() { NextRes.clock.reset(); });
+      psychoJS.window.callOnFlip(function() { NextRes.start(); });
       psychoJS.window.callOnFlip(function() { NextRes.clearEvents(); });
     }
-    
-    // if NextRes is active this frame...
+
     if (NextRes.status === PsychoJS.Status.STARTED) {
       let theseKeys = NextRes.getKeys({keyList: ['space'], waitRelease: false});
       _NextRes_allKeys = _NextRes_allKeys.concat(theseKeys);
       if (_NextRes_allKeys.length > 0) {
-        NextRes.keys = _NextRes_allKeys[_NextRes_allKeys.length - 1].name;  // just the last key pressed
+        NextRes.keys = _NextRes_allKeys[_NextRes_allKeys.length - 1].name;
         NextRes.rt = _NextRes_allKeys[_NextRes_allKeys.length - 1].rt;
         NextRes.duration = _NextRes_allKeys[_NextRes_allKeys.length - 1].duration;
-        // a response ends the routine
+
+        // --- AUDIO UNLOCK on key press ---
+        if (psychoJS.window.audioContext && psychoJS.window.audioContext.state === 'suspended') {
+          await psychoJS.window.audioContext.resume();
+          const dummy = psychoJS.window.audioContext.createBufferSource();
+          dummy.buffer = psychoJS.window.audioContext.createBuffer(1, 1, 22050);
+          dummy.connect(psychoJS.window.audioContext.destination);
+          dummy.start();
+        }
+
         continueRoutine = false;
       }
 
@@ -879,35 +831,43 @@ function Likert_1RoutineEachFrame() {
             NextRes.keys = 'space';
             NextRes.rt = NextRes.clock ? NextRes.clock.getTime() : 0;
             NextRes.duration = 0;
+
+            // --- AUDIO UNLOCK on tap ---
+            if (psychoJS.window.audioContext && psychoJS.window.audioContext.state === 'suspended') {
+              await psychoJS.window.audioContext.resume();
+              const dummy = psychoJS.window.audioContext.createBufferSource();
+              dummy.buffer = psychoJS.window.audioContext.createBuffer(1, 1, 22050);
+              dummy.connect(psychoJS.window.audioContext.destination);
+              dummy.start();
+            }
+
             continueRoutine = false;
             mouse.clickTime = now;
           }
         }
       }
       // --- END FALLBACK ---
-      //////////////////////////////////////////////////////////////////////////
-
+      ///////////////////////////////////////////////////////////////////////////
     }
-    
-    // check for quit (typically the Esc key)
-    if (psychoJS.experiment.experimentEnded || psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
+
+    // quit check
+    if (psychoJS.experiment.experimentEnded ||
+        psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
       return quitPsychoJS('The [Escape] key was pressed. Goodbye!', false);
     }
-    
-    // check if the Routine should terminate
-    if (!continueRoutine) {  // a component has requested a forced-end of Routine
+
+    if (!continueRoutine) {
       routineForceEnded = true;
       return Scheduler.Event.NEXT;
     }
-    
-    continueRoutine = false;  // reverts to True if at least one component still running
+
+    continueRoutine = false;
     for (const thisComponent of Likert_1Components)
       if ('status' in thisComponent && thisComponent.status !== PsychoJS.Status.FINISHED) {
         continueRoutine = true;
         break;
       }
-    
-    // refresh the screen if continuing
+
     if (continueRoutine) {
       return Scheduler.Event.FLIP_REPEAT;
     } else {
@@ -915,6 +875,7 @@ function Likert_1RoutineEachFrame() {
     }
   };
 }
+
 
 
 function Likert_1RoutineEnd(snapshot) {
