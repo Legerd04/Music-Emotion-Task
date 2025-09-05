@@ -358,6 +358,7 @@ function WelcomeScreenRoutineEachFrame() {
     }
     
     // if Welcomekey is active this frame...
+    let tapDetected = false;
     if (Welcomekey.status === PsychoJS.Status.STARTED) {
       let theseKeys = Welcomekey.getKeys({keyList: ['space'], waitRelease: false});
       _Welcomekey_allKeys = _Welcomekey_allKeys.concat(theseKeys);
@@ -379,12 +380,18 @@ function WelcomeScreenRoutineEachFrame() {
             Welcomekey.keys = 'space';
             Welcomekey.rt = Welcomekey.clock ? Welcomekey.clock.getTime() : 0;
             Welcomekey.duration = 0;
+            tapDetected = true;
             continueRoutine = false;
             mouse.clickTime = now;
           }
         }
       }
       // --- END FALLBACK ---
+      if ((!continueRoutine && ( _Welcomekey_allKeys.length > 0 || tapDetected )) &&
+          psychoJS.window.audioContext &&
+          psychoJS.window.audioContext.state === 'suspended') {
+        psychoJS.window.audioContext.resume();
+      }
       ////////////////////////////////////////////////////////////////////////////////
     }
     
