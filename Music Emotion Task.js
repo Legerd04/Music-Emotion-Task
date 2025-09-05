@@ -200,7 +200,7 @@ async function experimentInit() {
   Likert1txt = new visual.TextStim({
   win: psychoJS.window,
   name: 'Likert1txt',
-  text: 'Please indicate which emotion among these six best describes the feeling conveyed by the track.',
+  text: 'Please indicate which emotion among these six best describes\n the feeling conveyed by the track.',
   font: 'Arial',
   units: undefined, 
   pos: [0, 0.1], draggable: false, 
@@ -992,7 +992,7 @@ function GoodbyeRoutineBegin(snapshot) {
       }
 
       const lines = [];
-      lines.push("Thank you for participating!\nIn this study, we asked an AI model to create each of the individual music pieces you just heard by giving it one single primary emotion as prompt each time.\nLet\'s see if AI did a good job in interpreting which musical tune should correspond to which human emotion:");
+      lines.push("Thank you for participating!\nIn this study, we asked an AI model to create each of the individual music pieces\n you just heard by giving it one single primary emotion as prompt each time.\nLet\'s see if AI did a good job in interpreting \nwhich musical tune should correspond to which human emotion:");
       lines.push("");
 
       if (totalTrials > 0) {
@@ -1017,11 +1017,11 @@ function GoodbyeRoutineBegin(snapshot) {
 
         lines.push("");
         if (totalCorrect === totalTrials) {
-          lines.push("🎉 Perfect score! Based on your responses, looks like AI is doing an Amazing job generating music corresponding to\nprimary emotions that humans can relate to!");
+          lines.push("🎉 Perfect score! Based on your responses, looks like \nAI is doing an Amazing job generating music corresponding to\nprimary emotions that humans can relate to!");
         } else if (totalCorrect > totalTrials / 2) {
-          lines.push("👍 Good effort! Based on your responses, your emotions matched with more than half of what AI generated when we gave it a parimary emotion.");
+          lines.push("👍 Good effort! Based on your responses, your emotions matched with more than \nhalf of what AI generated when we gave it a parimary emotion.");
         } else {
-          lines.push("💡 Based on your responses, looks like AI still needs to catch up on human emotions and how it relates to musical tunes!");
+          lines.push("💡 Based on your responses, looks like AI still needs to catch up on \nhuman emotions and how it relates to musical tunes!");
         }
       } else {
         // fallback if nothing recorded
