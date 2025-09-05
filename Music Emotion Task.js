@@ -149,7 +149,7 @@ async function experimentInit() {
   Welcometxt = new visual.TextStim({
     win: psychoJS.window,
     name: 'Welcometxt',
-    text: 'Welcome, and thank you for your participation in this study!\n\n\nIn this task, you will be presented with 6 short instrumental music clips. Each clip will play for approximately 15 seconds. \n\nAfter listening to each clip, you will be asked to respond to two simple questions regarding your experience of the music. There are no right or wrong answers. We are interested in your personal impressions.\n\n Please press SPACEBAR to begin with Track 1.',
+    text: 'Welcome, and thank you for your participation in this study!\n\n\nIn this task, you will be presented with 6 short instrumental music clips. Each clip will play for approximately 15 seconds. \n\nAfter listening to each clip, you will be asked to respond to two simple questions regarding your experience of the music. There are no right or wrong answers. We are interested in your personal impressions.\n\n Please press SPACEBAR or TAP to begin with Track 1.',
     font: 'Arial',
     units: undefined, 
     pos: [0, 0], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
@@ -188,7 +188,7 @@ async function experimentInit() {
   win: psychoJS.window, name: 'Likert1',
   startValue: undefined,
   size: [0.7, 0.05], pos: [0, (-0.2)], ori: 0.0, units: psychoJS.window.units,
-  labels: ["Happy", "Sad", "Anger", "Fear", "Disgust", "Surprise"], fontSize: 0.035, ticks: [],
+  labels: ["Happy", "Sad", "Anger", "Fear", "Disgust", "Surprise"], fontSize: 0.025, wrapWidth: 0.1, ticks: [],
   granularity: 1, style: ["RADIO"],
   color: new util.Color([(-1.0), (-1.0), (-1.0)]), 
   markerColor: new util.Color([(-1.0), (-1.0), (-1.0)]), 
@@ -974,7 +974,7 @@ function GoodbyeRoutineBegin(snapshot) {
     // keep track of whether this Routine was forcibly ended
     routineForceEnded = false;
     GoodbyeClock.reset(routineTimer.getTime());
-    routineTimer.add(2400.000000);
+    routineTimer.add(1800.000000);
     GoodbyeMaxDurationReached = false;
     // update component parameters for each repeat
     psychoJS.experiment.addData('Goodbye.started', globalClock.getTime());
@@ -1074,7 +1074,7 @@ function GoodbyeRoutineEachFrame() {
     if (ThankYou.status === PsychoJS.Status.STARTED) {
     }
     
-    frameRemains = 0 + 40 - psychoJS.window.monitorFramePeriod * 0.75;// most of one frame period left
+    frameRemains = 0 + 30 - psychoJS.window.monitorFramePeriod * 0.75;// most of one frame period left
     if (ThankYou.status === PsychoJS.Status.STARTED && t >= frameRemains) {
       // keep track of stop time/frame for later
       ThankYou.tStop = t;  // not accounting for scr refresh
@@ -1125,7 +1125,7 @@ function GoodbyeRoutineEnd(snapshot) {
         routineTimer.reset();} else if (GoodbyeMaxDurationReached) {
         GoodbyeClock.add(GoodbyeMaxDuration);
     } else {
-        GoodbyeClock.add(2400.000000);
+        GoodbyeClock.add(1800.000000);
     }
     // Routines running outside a loop should always advance the datafile row
     if (currentLoop === psychoJS.experiment) {
