@@ -916,7 +916,7 @@ function GoodbyeRoutineBegin(snapshot) {
     // keep track of whether this Routine was forcibly ended
     routineForceEnded = false;
     GoodbyeClock.reset(routineTimer.getTime());
-    routineTimer.add(20.000000);
+    routineTimer.add(1200.000000);
     GoodbyeMaxDurationReached = false;
     // update component parameters for each repeat
     psychoJS.experiment.addData('Goodbye.started', globalClock.getTime());
@@ -956,7 +956,7 @@ function GoodbyeRoutineEachFrame() {
     if (ThankYou.status === PsychoJS.Status.STARTED) {
     }
     
-    frameRemains = 0 + 5 - psychoJS.window.monitorFramePeriod * 0.75;// most of one frame period left
+    frameRemains = 0 + 20 - psychoJS.window.monitorFramePeriod * 0.75;// most of one frame period left
     if (ThankYou.status === PsychoJS.Status.STARTED && t >= frameRemains) {
       // keep track of stop time/frame for later
       ThankYou.tStop = t;  // not accounting for scr refresh
@@ -1007,7 +1007,7 @@ function GoodbyeRoutineEnd(snapshot) {
         routineTimer.reset();} else if (GoodbyeMaxDurationReached) {
         GoodbyeClock.add(GoodbyeMaxDuration);
     } else {
-        GoodbyeClock.add(20.000000);
+        GoodbyeClock.add(1200.000000);
     }
     // Routines running outside a loop should always advance the datafile row
     if (currentLoop === psychoJS.experiment) {
