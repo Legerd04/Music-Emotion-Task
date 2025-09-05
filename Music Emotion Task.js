@@ -200,7 +200,7 @@ async function experimentInit() {
   Likert1txt = new visual.TextStim({
   win: psychoJS.window,
   name: 'Likert1txt',
-  text: 'Please indicate which emotion among these six best describes\n the feeling conveyed by the track.',
+  text: 'Please indicate which emotion among these \nsix best describes\n the feeling conveyed by the track.',
   font: 'Arial',
   units: undefined, 
   pos: [0, 0.1], draggable: false, 
@@ -246,7 +246,7 @@ async function experimentInit() {
   NextTxt = new visual.TextStim({
   win: psychoJS.window,
   name: 'NextTxt',
-  text: 'Press SPACEBAR or TAP THE SCREEN to proceed. Use ESC to abandon the experiment...',
+  text: 'Press SPACEBAR or TAP THE SCREEN to proceed. \nUse ESC to abandon the experiment...',
   font: 'Arial',
   units: undefined, 
   pos: [0, 0], draggable: false, 
