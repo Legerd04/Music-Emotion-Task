@@ -71,7 +71,7 @@ flowScheduler.add(trialsLoopEnd);
 flowScheduler.add(GoodbyeRoutineBegin());
 flowScheduler.add(GoodbyeRoutineEachFrame());
 flowScheduler.add(GoodbyeRoutineEnd());
-flowScheduler.add(quitPsychoJS, 'Thank you for your patience.', false);
+flowScheduler.add(quitPsychoJS, 'Please share this experiment with your friends if you found this interesting. Goodbye!', false);
 
 // quit if user presses Cancel in dialog box:
 dialogCancelScheduler.add(quitPsychoJS, 'Thank you for your patience.', false);
@@ -232,7 +232,7 @@ async function experimentInit() {
   NextTxt = new visual.TextStim({
     win: psychoJS.window,
     name: 'NextTxt',
-    text: 'Press SPACEBAR to proceed...',
+    text: 'Press SPACEBAR to proceed or ESC to abandon the experiment...',
     font: 'Arial',
     units: undefined, 
     pos: [0, 0], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
@@ -248,7 +248,7 @@ async function experimentInit() {
   ThankYou = new visual.TextStim({
     win: psychoJS.window,
     name: 'ThankYou',
-    text: 'Thank you for participating!',
+    text: 'Thank you for participating!\nIn this study, we asked an AI model to create each of the individual music pieces you just heard by giving it one single primary emotion each time.\nLet\'s see if AI is doing a good job in understanding which musical tune should correspond to which human emotion:',
     font: 'Arial',
     units: undefined, 
     pos: [0, 0], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0.0,
@@ -916,7 +916,7 @@ function GoodbyeRoutineBegin(snapshot) {
     // keep track of whether this Routine was forcibly ended
     routineForceEnded = false;
     GoodbyeClock.reset(routineTimer.getTime());
-    routineTimer.add(5.000000);
+    routineTimer.add(20.000000);
     GoodbyeMaxDurationReached = false;
     // update component parameters for each repeat
     psychoJS.experiment.addData('Goodbye.started', globalClock.getTime());
@@ -1007,7 +1007,7 @@ function GoodbyeRoutineEnd(snapshot) {
         routineTimer.reset();} else if (GoodbyeMaxDurationReached) {
         GoodbyeClock.add(GoodbyeMaxDuration);
     } else {
-        GoodbyeClock.add(5.000000);
+        GoodbyeClock.add(20.000000);
     }
     // Routines running outside a loop should always advance the datafile row
     if (currentLoop === psychoJS.experiment) {
